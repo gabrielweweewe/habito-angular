@@ -1,5 +1,7 @@
 "use client";
 
+import { Icon } from "@/components/ui/Icon";
+
 export function LogoutButton() {
   async function handleLogout() {
     await fetch("/api/auth/logout", { method: "POST", credentials: "include" });
@@ -9,8 +11,9 @@ export function LogoutButton() {
     <button
       type="button"
       onClick={handleLogout}
-      className="w-full text-left px-3 py-2 rounded hover:bg-gray-100 text-gray-600"
+      className="w-full text-left flex items-center gap-2 px-3 py-2.5 rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground transition-colors duration-200"
     >
+      <Icon name="logout" size={22} />
       Sair
     </button>
   );

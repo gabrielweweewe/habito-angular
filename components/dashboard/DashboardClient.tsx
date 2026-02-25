@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Icon } from "@/components/ui/Icon";
 import { LevelProgress } from "./LevelProgress";
 import { StreakCounter } from "./StreakCounter";
 import { WeeklyPointsChart } from "./WeeklyPointsChart";
@@ -39,7 +40,8 @@ export function DashboardClient() {
 
   if (error) {
     return (
-      <div className="text-red-600 p-4">
+      <div className="flex items-center gap-2 text-red-400 p-4 animate-fade-in">
+        <Icon name="error" size={20} />
         {error}
       </div>
     );
@@ -47,40 +49,68 @@ export function DashboardClient() {
 
   if (!data) {
     return (
-      <div className="p-4 text-gray-500">
+      <div className="p-4 text-muted-foreground animate-pulse-soft">
         Carregando métricas...
       </div>
     );
   }
 
-  const { levelProgress, streak, weeklyPoints, monthlyPoints, autonomyTrend, entryTypeDistribution } = data;
+  const {
+    levelProgress,
+    streak,
+    weeklyPoints,
+    monthlyPoints,
+    autonomyTrend,
+    entryTypeDistribution,
+  } = data;
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold">Dashboard</h1>
+      <h1 className="text-2xl font-bold text-foreground animate-fade-in flex items-center gap-2">
+        <Icon name="dashboard" size={28} className="text-accent" />
+        Dashboard
+      </h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <LevelProgress
-          level={levelProgress.level}
-          xpInCurrentLevel={levelProgress.xpInCurrentLevel}
-          nextLevelXP={levelProgress.nextLevelXP}
-          totalXP={levelProgress.totalXP}
-        />
-        <StreakCounter current={streak.current} longest={streak.longest} />
+        <div className="animate-slide-up opacity-0" style={{ animationDelay: "0.05s" }}>
+          <LevelProgress
+            level={levelProgress.level}
+            xpInCurrentLevel={levelProgress.xpInCurrentLevel}
+            nextLevelXP={levelProgress.nextLevelXP}
+            totalXP={levelProgress.totalXP}
+          />
+        </div>
+        <div className="animate-slide-up opacity-0" style={{ animationDelay: "0.1s" }}>
+          <StreakCounter current={streak.current} longest={streak.longest} />
+        </div>
       </div>
 
-      <div className="rounded border p-4 bg-white">
-        <h3 className="font-semibold text-sm text-gray-700 mb-1">Pontos no mês</h3>
-        <p className="text-2xl font-bold text-emerald-600">{monthlyPoints}</p>
+      <div
+        className="rounded-xl border border-border bg-card p-4 transition-shadow duration-200 hover:shadow-lg hover:shadow-accent/5 animate-slide-up opacity-0"
+        style={{ animationDelay: "0.15s" }}
+      >
+        <h3 className="font-semibold text-sm text-muted-foreground mb-1 flex items-center gap-2">
+          <Icon name="emoji_events" size={20} className="text-accent" />
+          Pontos no mês
+        </h3>
+        <p className="text-2xl font-bold text-accent">{monthlyPoints}</p>
       </div>
 
-      <PointsLegend />
+      <div className="animate-slide-up opacity-0" style={{ animationDelay: "0.2s" }}>
+        <PointsLegend />
+      </div>
 
-      <WeeklyPointsChart data={weeklyPoints} />
+      <div className="animate-slide-up opacity-0" style={{ animationDelay: "0.25s" }}>
+        <WeeklyPointsChart data={weeklyPoints} />
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <AutonomyTrendChart data={autonomyTrend} />
-        <EntryTypeChart data={entryTypeDistribution} />
+        <div className="animate-slide-up opacity-0" style={{ animationDelay: "0.3s" }}>
+          <AutonomyTrendChart data={autonomyTrend} />
+        </div>
+        <div className="animate-slide-up opacity-0" style={{ animationDelay: "0.35s" }}>
+          <EntryTypeChart data={entryTypeDistribution} />
+        </div>
       </div>
     </div>
   );

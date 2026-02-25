@@ -1,5 +1,7 @@
 "use client";
 
+import { Icon } from "@/components/ui/Icon";
+
 interface LevelProgressProps {
   level: number;
   xpInCurrentLevel: number;
@@ -13,17 +15,23 @@ export function LevelProgress({
   nextLevelXP,
   totalXP,
 }: LevelProgressProps) {
-  const pct = nextLevelXP > 0 ? Math.min(100, (xpInCurrentLevel / nextLevelXP) * 100) : 100;
+  const pct =
+    nextLevelXP > 0
+      ? Math.min(100, (xpInCurrentLevel / nextLevelXP) * 100)
+      : 100;
   return (
-    <div className="rounded border p-4 bg-white">
-      <h3 className="font-semibold text-sm text-gray-700 mb-2">Nível {level}</h3>
-      <div className="h-3 bg-gray-200 rounded-full overflow-hidden">
+    <div className="rounded-xl border border-border bg-card p-4 transition-shadow duration-200 hover:shadow-lg hover:shadow-accent/5">
+      <h3 className="font-semibold text-sm text-muted-foreground mb-2 flex items-center gap-2">
+        <Icon name="trending_up" size={20} className="text-accent" />
+        Nível {level}
+      </h3>
+      <div className="h-3 bg-muted rounded-full overflow-hidden">
         <div
-          className="h-full bg-emerald-600 rounded-full transition-all"
+          className="h-full bg-accent rounded-full transition-all duration-500 ease-out"
           style={{ width: `${pct}%` }}
         />
       </div>
-      <p className="text-xs text-gray-500 mt-1">
+      <p className="text-xs text-muted-foreground mt-1.5">
         {xpInCurrentLevel} / {nextLevelXP} XP neste nível · Total: {totalXP} XP
       </p>
     </div>
