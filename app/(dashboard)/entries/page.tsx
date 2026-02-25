@@ -48,6 +48,7 @@ export default function EntriesPage() {
     interruptionManagedWell: false,
   });
   const [submitting, setSubmitting] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   function loadEntries() {
@@ -103,6 +104,19 @@ export default function EntriesPage() {
       })
       .catch((e) => setError(e.message))
       .finally(() => setSubmitting(false));
+  }
+
+  function handleDelete(id: string) {
+    if (!confirm("Excluir esta entrada? Esta ação não pode ser desfeita.")) return;
+    setDeletingId(id);
+    setError(null);
+    fetch(`/api/entries/${id}`, { method: "DELETE", credentials: "include" })
+      .then((r) => {
+        if (!r.ok) return r.json().then((d) => Promise.reject(new Error(d.error || "Erro ao excluir")));
+      })
+      .then(() => loadEntries())
+      .catch((e) => setError(e.message))
+      .finally(() => setDeletingId(null));
   }
 
   if (loading) return <p className="text-gray-500">Carregando...</p>;
@@ -236,19 +250,29 @@ export default function EntriesPage() {
         ) : (
           <ul className="space-y-3">
             {entries.map((e) => (
-              <li key={e._id} className="rounded border p-4 bg-white">
-                <p className="text-sm text-gray-500">
-                  {format(new Date(e.date), "dd/MM/yyyy")} · {ENTRY_TYPES.find((t) => t.value === e.entryType)?.label ?? e.entryType}
-                  {e.projectName && ` · ${e.projectName}`}
-                </p>
-                {e.description && <p className="mt-1 text-sm">{e.description}</p>}
-                {e.learned && <p className="mt-1 text-sm text-gray-600">Aprendi: {e.learned}</p>}
-                <div className="mt-2 flex gap-2 text-xs text-gray-500">
-                  {e.difficulty != null && <span>Dificuldade: {e.difficulty}</span>}
-                  {e.autonomyScore != null && <span>Autonomia: {e.autonomyScore}</span>}
-                  {e.deepWorkBlockCompleted && <span>Deep work</span>}
-                  {e.interruptionManagedWell && <span>Interrupção ok</span>}
+              <li key={e._id} className="rounded border p-4 bg-white flex justify-between gap-4">
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm text-gray-500">
+                    {format(new Date(e.date), "dd/MM/yyyy")} · {ENTRY_TYPES.find((t) => t.value === e.entryType)?.label ?? e.entryType}
+                    {e.projectName && ` · ${e.projectName}`}
+                  </p>
+                  {e.description && <p className="mt-1 text-sm">{e.description}</p>}
+                  {e.learned && <p className="mt-1 text-sm text-gray-600">Aprendi: {e.learned}</p>}
+                  <div className="mt-2 flex gap-2 text-xs text-gray-500">
+                    {e.difficulty != null && <span>Dificuldade: {e.difficulty}</span>}
+                    {e.autonomyScore != null && <span>Autonomia: {e.autonomyScore}</span>}
+                    {e.deepWorkBlockCompleted && <span>Deep work</span>}
+                    {e.interruptionManagedWell && <span>Interrupção ok</span>}
+                  </div>
                 </div>
+                <button
+                  type="button"
+                  onClick={() => handleDelete(e._id)}
+                  disabled={deletingId === e._id}
+                  className="shrink-0 self-start px-3 py-1.5 text-sm rounded border border-red-200 text-red-600 hover:bg-red-50 disabled:opacity-50"
+                >
+                  {deletingId === e._id ? "Excluindo..." : "Excluir"}
+                </button>
               </li>
             ))}
           </ul>
