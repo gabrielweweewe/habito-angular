@@ -6,6 +6,7 @@ import { StreakCounter } from "./StreakCounter";
 import { WeeklyPointsChart } from "./WeeklyPointsChart";
 import { AutonomyTrendChart } from "./AutonomyTrendChart";
 import { EntryTypeChart } from "./EntryTypeChart";
+import { PointsLegend } from "./PointsLegend";
 
 interface DashboardData {
   levelProgress: {
@@ -72,6 +73,8 @@ export function DashboardClient() {
         <h3 className="font-semibold text-sm text-gray-700 mb-1">Pontos no mês</h3>
         <p className="text-2xl font-bold text-emerald-600">{monthlyPoints}</p>
       </div>
+
+      <PointsLegend />
 
       <WeeklyPointsChart data={weeklyPoints} />
 
